@@ -19,13 +19,14 @@ app.get('/', (req, res) => {
 		status: 'ok',
 		message: 'online'
 	});
-});/* 
-app.get('/test', (req, res) => {
+});
+app.post('/test', (req, res) => {
+	console.log(req.body);
 	res.status(200).send({
 		status: 'ok',
 		message: 'acción de pruebas en el servidor NodeJS'
 	});
-}); */
+});
 
 //exportar
 module.exports = app;

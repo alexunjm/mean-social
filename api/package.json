@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
 	"start": "nodemon index.js",
+	"run:db": "mongod --dbpath=../db-curso-mean-social",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
