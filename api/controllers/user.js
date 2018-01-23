@@ -5,6 +5,7 @@ var bcrypt = require('bcrypt-nodejs')
 var User = require('../models/user');
 var jwt = require('../services/jwt');
 
+/** Método de prueba */
 var home = (req, res) => {
 	res.status(200).send({
 		status: 'ok',
@@ -12,6 +13,7 @@ var home = (req, res) => {
 	});
 };
 
+/** Método de prueba */
 var test = (req, res) => {
 	console.log(req.body);
 	res.status(200).send({
@@ -28,6 +30,7 @@ var hasDefaultParams = params => {
 			params.pass;
 };
 
+/** Registro */
 var saveUser = (req, res) => {
 	var params = req.body;
 	var user = new User();
@@ -76,6 +79,7 @@ var saveUser = (req, res) => {
 
 };
 
+/** Login */
 var loginUser = (req, res) => {
 
 	var params = req.body;
@@ -109,9 +113,27 @@ var loginUser = (req, res) => {
 
 }
 
+/** Obtener datos de un usuario */
+var getUser = (req, res) => {
+	var userId = req.params.id;
+	console.log(userId);
+
+	User.findById(userId, (err, user) => {
+		/* console.log(err); */
+		if(err) return res.status(500).send({status: 'error', message: 'Error en la petición'});
+
+		if(!user) return res.status(404).send({status: 'error', message: 'El usuario no existe'});
+
+		user.pass = undefined;
+		return res.status(200).send({user});
+	});
+}
+
+
 module.exports = {
 	home,
 	test,
 	saveUser,
-	loginUser
+	loginUser,
+	getUser
 }
