@@ -2,6 +2,8 @@
 
 var bcrypt = require('bcrypt-nodejs');
 var mongoosePaginate = require('mongoose-pagination');
+const path = require('path');
+const fs = require('fs');
 
 var User = require('../models/user');
 var jwt = require('../services/jwt');
@@ -167,6 +169,44 @@ var updateUser = (req, res) => {
 	});
 }
 
+/** Subir archivos de imagen/avatar de usuario */
+var uploadImage = (req, res) => {
+	var userId = req.params.id;
+
+	if (userId != req.user.sub) {
+		return removeFile(res, filePath, 'No tienes permisos para actualizar la imagen de este usuario');
+	}
+
+	if (req.files && req.files.image) {
+		var filePath = req.files.image.path;
+		var fileName = path.basename(filePath);
+		var fileExt = path.extname(fileName);
+		console.log(fileExt);
+
+		if (fileExt == '.png' || fileExt == '.jpg' || fileExt == '.jpeg' || fileExt == '.gif') {
+			//Actualizar documento de usuario logueado
+			User.findByIdAndUpdate(userId, { image: fileName }, { new: true /*devuelve el objeto actualizado*/ }, (err, userUpdated) => {
+				if (err) return res.status(500).send({ status: 'error', message: 'Error en la petición' });
+
+				if (!userUpdated) return res.status(404).send({ status: 'error', message: 'No se ha podido actualizar el usuario' });
+
+				return res.status(200).send({ user: userUpdated });
+			});
+		} else {
+			return removeFile(res, filePath, 'Extensión no válida');
+		}
+	} else {
+		return res.status(200).send({status: 'error', message: 'No se adjuntó una imagen en el request'})
+	}
+}
+
+var removeFile = (res, filePath, message) => {
+
+	fs.unlink(filePath, err => {
+		return res.status(500).send({ status: 'error', message});
+	});
+}
+
 module.exports = {
 	home,
 	test,
@@ -174,5 +214,6 @@ module.exports = {
 	loginUser,
 	getUser,
 	getUsers,
-	updateUser
-}
+	updateUser,
+	uploadImage
+};
