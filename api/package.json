@@ -4,18 +4,18 @@
   "description": "backend como ejemplo de una red social",
   "main": "index.js",
   "scripts": {
-	"start": "nodemon index.js",
-	"run:db": "mongod --dbpath=../db-curso-mean-social",
+    "start": "nodemon index.js",
+    "run:db": "mongod --dbpath=../db-curso-mean-social",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-	"mongodb",
+    "mongodb",
     "express",
     "angular",
-	"node",
+    "node",
     "mean",
-	"stack",
-	"js"
+    "stack",
+    "js"
   ],
   "author": "Alexander Jaramillo <alexunjm@gmail.com>",
   "license": "MIT",
@@ -26,7 +26,8 @@
     "express": "^4.16.2",
     "jwt-simple": "^0.5.1",
     "moment": "^2.20.1",
-    "mongoose": "^4.13.9"
+    "mongoose": "^4.13.9",
+    "mongoose-pagination": "^1.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.14.11"

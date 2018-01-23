@@ -129,11 +129,31 @@ var getUser = (req, res) => {
 	});
 }
 
+/** Devolver un listado de usuarios paginado */
+var getUsers = (req, res) => {
+	var identity_user_id = req.user.sub;
+	var page = 1;
+	if(req.params.page) {
+		page = req.params.page;
+	}
+	var itemsPerPage = 5;
+
+	User.find().sort('_id').paginate(page, itemsPerPage, (err, users, total) => {
+		/* console.log(err); */
+		if (err) return res.status(500).send({ status: 'error', message: 'Error en la petición' });
+
+		if (!users) return res.status(404).send({ status: 'error', message: 'No hay usuarios disponibles' });
+
+		return res.status(200).send({ users, total, pages: Math.ceil(total/itemsPerPage) });
+	});
+}
+
 
 module.exports = {
 	home,
 	test,
 	saveUser,
 	loginUser,
-	getUser
+	getUser,
+	getUsers
 }
