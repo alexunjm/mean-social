@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var app = express();
 
 //cargar rutas
+var user_router = require('./routes/user');
 
 //middleware
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -14,19 +15,7 @@ app.use(bodyParser.json());
 //cors
 
 //rutas
-app.get('/', (req, res) => {
-	res.status(200).send({
-		status: 'ok',
-		message: 'online'
-	});
-});
-app.post('/test', (req, res) => {
-	console.log(req.body);
-	res.status(200).send({
-		status: 'ok',
-		message: 'acción de pruebas en el servidor NodeJS'
-	});
-});
+app.use('/api', user_router);
 
 //exportar
 module.exports = app;
