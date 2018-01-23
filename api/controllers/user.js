@@ -3,6 +3,7 @@
 var bcrypt = require('bcrypt-nodejs')
 
 var User = require('../models/user');
+var jwt = require('../services/jwt');
 
 var home = (req, res) => {
 	res.status(200).send({
@@ -75,8 +76,42 @@ var saveUser = (req, res) => {
 
 };
 
+var loginUser = (req, res) => {
+
+	var params = req.body;
+	var [email, pass] = [params.email, params.pass];
+
+	User.findOne({email: email}, (err, user) => {
+		if (err) return res.status(500).send({ status: 'error', message: 'El usuario no se pudo identificar' });
+
+		if(user) {
+			bcrypt.compare(pass, user.pass, (err, check) => {
+				if(check) {
+					
+					if(params.getToken) {
+						/** Devolver token */
+						/** Generar token */
+						return res.status(200).send({token: jwt.createToken(user)});
+					} else {
+						/** Devolvemos datos de usuario */
+						user.pass = undefined;
+						return res.status(200).send({user});
+					}
+
+				} else {
+					return res.status(500).send({ status: 'error', message: 'El usuario no se pudo identificar'});
+				}
+			});
+		} else {
+			return res.status(500).send({ status: 'error', message: 'El usuario no se pudo identificar' });
+		}
+	});
+
+}
+
 module.exports = {
 	home,
 	test,
-	saveUser
+	saveUser,
+	loginUser
 }
