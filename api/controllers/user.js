@@ -8,7 +8,7 @@ var jwt = require('../services/jwt');
 
 /** Método de prueba */
 var home = (req, res) => {
-	res.status(200).send({
+	return res.status(200).send({
 		status: 'ok',
 		message: 'online'
 	});
@@ -17,7 +17,7 @@ var home = (req, res) => {
 /** Método de prueba */
 var test = (req, res) => {
 	console.log(req.body);
-	res.status(200).send({
+	return res.status(200).send({
 		status: 'ok',
 		message: 'acción de pruebas en el servidor NodeJS'
 	});
@@ -61,9 +61,9 @@ var saveUser = (req, res) => {
 						if (err) return res.status(500).send({ status: 'error', message: 'Error al guardar el usuario'})
 		
 						if(userStored) {
-							res.status(200).send({user: userStored});
+							return res.status(200).send({user: userStored});
 						} else {
-							res.status(404).send({status: 'error', message: 'no se pudo registrar el usuario'});
+							return res.status(404).send({status: 'error', message: 'no se pudo registrar el usuario'});
 						}
 					});
 				});
@@ -72,7 +72,7 @@ var saveUser = (req, res) => {
 
 	} else {
 
-		res.status(200).send({
+		return res.status(200).send({
 			status: 'error',
 			message: 'Debes enviar todos los campos necesarios'
 		});
@@ -120,7 +120,6 @@ var getUser = (req, res) => {
 	console.log(userId);
 
 	User.findById(userId, (err, user) => {
-		/* console.log(err); */
 		if(err) return res.status(500).send({status: 'error', message: 'Error en la petición'});
 
 		if(!user) return res.status(404).send({status: 'error', message: 'El usuario no existe'});
@@ -140,7 +139,6 @@ var getUsers = (req, res) => {
 	var itemsPerPage = 5;
 
 	User.find().sort('_id').paginate(page, itemsPerPage, (err, users, total) => {
-		/* console.log(err); */
 		if (err) return res.status(500).send({ status: 'error', message: 'Error en la petición' });
 
 		if (!users) return res.status(404).send({ status: 'error', message: 'No hay usuarios disponibles' });
@@ -149,6 +147,25 @@ var getUsers = (req, res) => {
 	});
 }
 
+/** Actualizar un usuario */
+var updateUser = (req, res) => {
+	var userId = req.params.id;
+	var update = req.body;
+	//borrar la propiedad pass
+	delete update.pass;
+
+	if (userId != req.user.sub) {
+		return res.status(500).send({status: 'error', message: 'No tienes permisos para actualizar los datos del usuario'});
+	}
+	
+	User.findByIdAndUpdate(userId, update, {new: true /*devuelve el objeto actualizado*/}, (err, userUpdated) => {
+		if (err) return res.status(500).send({ status: 'error', message: 'Error en la petición' });
+
+		if (!userUpdated) return res.status(404).send({ status: 'error', message: 'No se ha podido actualizar el usuario' });
+
+		return res.status(200).send({user: userUpdated});
+	});
+}
 
 module.exports = {
 	home,
@@ -156,5 +173,6 @@ module.exports = {
 	saveUser,
 	loginUser,
 	getUser,
-	getUsers
+	getUsers,
+	updateUser
 }
