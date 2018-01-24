@@ -133,7 +133,7 @@ var getUser = (req, res) => {
 
 /** Devolver un listado de usuarios paginado */
 var getUsers = (req, res) => {
-	var identity_user_id = req.user.sub;
+	var identityUserId = req.user.sub;
 	var page = 1;
 	if(req.params.page) {
 		page = req.params.page;
@@ -198,14 +198,26 @@ var uploadImage = (req, res) => {
 	} else {
 		return res.status(200).send({status: 'error', message: 'No se adjuntó una imagen en el request'})
 	}
-}
+};
 
 var removeFile = (res, filePath, message) => {
 
 	fs.unlink(filePath, err => {
 		return res.status(500).send({ status: 'error', message});
 	});
-}
+};
+
+var getImageFile = (req, res) => {
+	var imageFile = req.params.imageFile;
+	var pathFile = `./uploads/users/${imageFile}` ;
+
+	console.log(pathFile);
+	if(fs.existsSync(pathFile)){
+		return res.sendFile(path.resolve(pathFile));
+	} else {
+		return res.status(404).send({ status: 'error', message: 'No existe la imagen' });
+	}
+};
 
 module.exports = {
 	home,
@@ -215,5 +227,6 @@ module.exports = {
 	getUser,
 	getUsers,
 	updateUser,
-	uploadImage
+	uploadImage,
+	getImageFile
 };
