@@ -4,10 +4,13 @@ import { NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 
+import { ManualComponent } from './manual/manual.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ManualComponent
   ],
   imports: [
     BrowserModule
