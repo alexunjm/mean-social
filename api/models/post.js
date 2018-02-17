@@ -1,11 +1,9 @@
-import { Schema } from 'mongoose';
-
 'use strict'
 
 var mongoose = require('mongoose');
-var Squema = mongoose.Schema;
+var Schema = mongoose.Schema;
 
-var PostSquema = Squema({
+var PostSchema = Schema({
 	user_id: { type: Schema.ObjectId, ref: 'User' },
 	text: String,
 	file: String,
@@ -13,4 +11,4 @@ var PostSquema = Squema({
 	updated_at: String
 });
 
-module.exports = mongoose.model('Post', PostSquema);
+module.exports = mongoose.model('Post', PostSchema);
