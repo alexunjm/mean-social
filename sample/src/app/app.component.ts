@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'alex app';
+  description = 'ejemplo de una app con ang5';
 }
