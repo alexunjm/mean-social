@@ -5,9 +5,18 @@ import {Component} from '@angular/core';
   templateUrl: './manual.component.html'
 })
 export class ManualComponent{
-  public nombre = 'Componente';
-  public ejemplo = 'Manual';
-  public mostrarEjemplo = false;
+  public nombre: string;
+  public ejemplo: string;
+  public mostrarEjemplo: boolean;
 
-  public arraySample = ['algun', 'número', 123];
+  public arraySample: Array<string | number>;
+
+  constructor(){
+
+    this.nombre = 'Componente';
+    this.ejemplo = 'Manual';
+    this.mostrarEjemplo = false;
+
+    this.arraySample = ['algun', 'número', 123];
+  }
 }
