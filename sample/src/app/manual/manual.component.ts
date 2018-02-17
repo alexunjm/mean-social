@@ -9,7 +9,7 @@ export class ManualComponent{
   public ejemplo: string;
   public mostrarEjemplo: boolean;
 
-  public arraySample: Array<string | number>;
+  public arraySample: Array<any>;
 
   constructor(){
 
